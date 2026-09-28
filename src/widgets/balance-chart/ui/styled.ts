@@ -43,7 +43,12 @@ export const ChartImage = styled.svg`
   position: absolute;
   inset: 0;
   overflow: visible;
+  border-radius: 12px;
   cursor: crosshair;
+
+  &:focus-visible {
+    outline-offset: 6px;
+  }
 `;
 
 export const ChartLine = styled(motion.path)`

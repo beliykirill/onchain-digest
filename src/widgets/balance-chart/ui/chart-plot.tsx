@@ -1,4 +1,4 @@
-import { type FC, type PointerEvent, useId, useMemo, useState } from 'react';
+import { type FC, type KeyboardEvent, type PointerEvent, useId, useMemo, useState } from 'react';
 import { curveMonotoneX } from '@visx/curve';
 import { scaleLinear } from '@visx/scale';
 import { area, line } from '@visx/shape';
@@ -66,6 +66,22 @@ export const ChartPlot: FC<IChartPlotProps> = ({ points, period, width, height, 
     setHovered(findNearestPoint(points, timestamp));
   };
 
+  const handleKeyDown = (event: KeyboardEvent<SVGSVGElement>) => {
+    const step = Math.max(1, Math.round(points.length / 48));
+    const index = hovered ? points.indexOf(hovered) : points.length - 1;
+    const nextIndex = {
+      ArrowLeft: index - step,
+      ArrowRight: index + step,
+      Home: 0,
+      End: points.length - 1,
+    }[event.key];
+
+    if (nextIndex == null) return;
+
+    event.preventDefault();
+    setHovered(points[Math.min(Math.max(nextIndex, 0), points.length - 1)] ?? null);
+  };
+
   const cursorX = hovered ? xScale(hovered.timestamp) : 0;
   const cursorY = hovered ? yScale(hovered.valueUsd) : 0;
   const morph: Transition = shouldReduceMotion
@@ -81,6 +97,10 @@ export const ChartPlot: FC<IChartPlotProps> = ({ points, period, width, height, 
         onPointerMove={handlePointer}
         onPointerLeave={() => setHovered(null)}
         onPointerCancel={() => setHovered(null)}
+        tabIndex={0}
+        onFocus={() => setHovered((current) => current ?? points.at(-1) ?? null)}
+        onBlur={() => setHovered(null)}
+        onKeyDown={handleKeyDown}
       >
         <defs>
           <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
@@ -94,7 +114,7 @@ export const ChartPlot: FC<IChartPlotProps> = ({ points, period, width, height, 
         <ChartArea
           d={areaPath}
           fill={`url(#${gradientId})`}
-          initial={shouldReduceMotion ? false : { opacity: 0 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, d: areaPath }}
           animate={{ d: areaPath, opacity: 1 }}
           transition={{
             d: morph,
@@ -104,7 +124,7 @@ export const ChartPlot: FC<IChartPlotProps> = ({ points, period, width, height, 
         <ChartLine
           d={linePath}
           style={{ stroke }}
-          initial={shouldReduceMotion ? false : { pathLength: 0 }}
+          initial={shouldReduceMotion ? false : { pathLength: 0, d: linePath }}
           animate={{ d: linePath, pathLength: 1 }}
           transition={{
             d: morph,
