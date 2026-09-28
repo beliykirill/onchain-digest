@@ -1,17 +1,23 @@
 # dependencies
-node_modules/
+/node_modules
+
+# testing
+/coverage
 
 # next.js
-.next/
-out/
+/.next/
+/out/
+/build
 next-env.d.ts
+*.tsbuildinfo
 
-# env
-.env*.local
-.env
+# env files — only the example is committed
+.env*
+!.env.example
 
 # misc
 .DS_Store
-*.tsbuildinfo
-coverage/
+*.pem
 .idea/
+npm-debug.log*
+.pnpm-debug.log*

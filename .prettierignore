@@ -1,0 +1,4 @@
+pnpm-lock.yaml
+src/shared/server/fixtures/data
+.next
+TASK.md
