@@ -137,3 +137,23 @@ for the same reason.
 
 → Zerion's last point is the end of the current bucket (up to ~12 min ahead). Clamping in `getWalletChart`
 keeps the component pure and the "Now" label honest.
+
+## Polish (Stage 4)
+
+### Theme: system by default, manual override without a flash
+
+→ Colors are CSS variables switched by `prefers-color-scheme` and by `data-theme` on `<html>`. A tiny inline
+script in `_document` applies the saved choice before first paint, and the toggle's sun/moon swap is pure CSS,
+so the server never needs to know the theme and there is no hydration mismatch.
+→ Rejected: a theme in React state or context (flashes the wrong theme on load).
+
+### The chart is operable from the keyboard
+
+→ The plot is focusable: focus shows the latest point, ←/→ scrub through time, Home/End jump to the ends. It
+reuses the pointer tooltip, so there is one code path for mouse, touch and keyboard.
+
+### Measured, not assumed
+
+→ Lighthouse (production build, mock data): Performance 100 / Accessibility 100 / Best Practices 100 / SEO 100
+on desktop, and 94–96 / 100 / 100 / 100 on mobile with throttling. CLS is 0 on desktop and 0.015 on mobile. All
+controls are at least 44 px tall. Text and background pairs are at least 4.5:1 in both themes.
