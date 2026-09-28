@@ -26,7 +26,15 @@ export default class LandingApp extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
+        <Head>
+          <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)" />
+          <meta name="theme-color" content="#080a0f" media="(prefers-color-scheme: dark)" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`,
+            }}
+          />
+        </Head>
         <body>
           <Main />
           <NextScript />

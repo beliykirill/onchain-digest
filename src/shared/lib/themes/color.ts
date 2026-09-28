@@ -4,6 +4,7 @@ export type ColorName =
   | 'surfaceBackground'
   | 'surfaceCard'
   | 'surfaceRaised'
+  | 'surfaceElevated'
   | 'surfaceStroke'
   | 'surfaceSkeleton'
   | 'textMain'
@@ -28,6 +29,7 @@ const LIGHT: Record<ColorName, PalettePath> = {
   surfaceBackground: 'gray.100',
   surfaceCard: 'gray.50',
   surfaceRaised: 'gray.100',
+  surfaceElevated: 'gray.50',
   surfaceStroke: 'gray.200',
   surfaceSkeleton: 'gray.200',
   textMain: 'gray.950',
@@ -44,6 +46,7 @@ const DARK: Record<ColorName, PalettePath> = {
   surfaceBackground: 'gray.1000',
   surfaceCard: 'gray.950',
   surfaceRaised: 'gray.900',
+  surfaceElevated: 'gray.800',
   surfaceStroke: 'gray.800',
   surfaceSkeleton: 'gray.800',
   textMain: 'gray.50',

@@ -19,7 +19,7 @@ export const SegmentButton = styled.button.attrs<ITextProps>({ $textTheme: 'semi
   ${captionTextStyle};
   position: relative;
   min-width: 56px;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0 14px;
   border: 0;
   border-radius: 9px;
@@ -44,7 +44,7 @@ export const SegmentIndicator = styled(motion.span)`
   z-index: 0;
   inset: 0;
   border-radius: 9px;
-  background: ${color('surfaceCard')};
+  background: ${color('surfaceElevated')};
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.08),
     0 0 0 1px ${color('surfaceStroke')};

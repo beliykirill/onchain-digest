@@ -33,11 +33,19 @@ export const Container = styled.div`
 export const LogoLink = styled(Link)`
   display: inline-flex;
   flex-shrink: 0;
+  margin-right: auto;
   align-items: center;
   gap: 10px;
   min-height: 44px;
   color: inherit;
   text-decoration: none;
+  transition: opacity 0.15s ease;
+
+  ${media(MediaType.HOVER)} {
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 `;
 
 export const LogoIcon = styled.span`
@@ -65,5 +73,6 @@ export const SearchContainer = styled.div`
 
   ${media(MediaType.MOBILE)} {
     flex-basis: 100%;
+    order: 3;
   }
 `;
