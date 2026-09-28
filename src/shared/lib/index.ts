@@ -7,6 +7,7 @@ export {
   getActivitySentence,
   getAddressKind,
   getContributionUsd,
+  isBridgeActivity,
   isEligibleForMovers,
   isValidAddress,
   normalizeAddress,

@@ -30,10 +30,11 @@ const describeApproval = ({ asset, amount, isUnlimited }: IApproval) => {
 
 const counterparty = (address: Nullable<string>) => (address ? shortenAddress(address) : null);
 
-const isBridge = (dappName: Nullable<string>) =>
-  dappName != null &&
+export const isBridgeActivity = ({ type, dapp }: IActivityItem) =>
+  (type === 'send' || type === 'execute' || type === 'trade') &&
+  dapp != null &&
   /bridge|across|stargate|hop protocol|wormhole|layerzero|relay|orbiter|synapse|celer|socket/i.test(
-    dappName,
+    dapp.name,
   );
 
 export const getActivitySentence = (item: IActivityItem): string => {
@@ -43,7 +44,7 @@ export const getActivitySentence = (item: IActivityItem): string => {
   const dappName = dapp?.name ?? null;
   const onDapp = dappName ? ` on ${dappName}` : '';
 
-  if (isBridge(dappName) && (type === 'send' || type === 'execute' || type === 'trade')) {
+  if (isBridgeActivity(item)) {
     return outgoing ? `Bridged ${outgoing} via ${dappName}` : `Bridged assets via ${dappName}`;
   }
 

@@ -16,8 +16,6 @@ interface IHttpTransportOptions {
   wait?: (ms: number) => Promise<void>;
 }
 
-const MAX_RETRIES = 2;
-
 const readSeconds = (response: Response, header: string): number | undefined => {
   const value = Number(response.headers.get(header));
 
@@ -58,7 +56,7 @@ export const createHttpTransport = ({
     Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
 
     for (let attempt = 0; ; attempt += 1) {
-      const canRetry = attempt < MAX_RETRIES;
+      const canRetry = attempt < 2;
       const backoffMs = 1000 * 2 ** attempt;
 
       await throttle();

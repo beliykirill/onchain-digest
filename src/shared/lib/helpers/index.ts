@@ -4,4 +4,4 @@ export { computeTopMovers, getContributionUsd, isEligibleForMovers } from './com
 export type { IPositionPeriodChange } from './compute-top-movers';
 export { formatPercent, formatTokenAmount, formatUsd } from './format-number';
 export { formatRelativeTime } from './format-relative-time';
-export { getActivitySentence } from './get-activity-sentence';
+export { getActivitySentence, isBridgeActivity } from './get-activity-sentence';
