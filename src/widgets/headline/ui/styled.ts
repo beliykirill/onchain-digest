@@ -90,7 +90,7 @@ export const SkeletonContainer = styled.div`
 
 export const AddressButton = styled(Button)`
   ${numericStyle};
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 12px;
   border-radius: 999px;
 `;
@@ -100,4 +100,18 @@ export const AddressIcon = styled.span<{ $icon: string }>`
   height: 14px;
   background: currentColor;
   mask: url(${prop('$icon')}) no-repeat center / contain;
+`;
+
+export const AddressTextContainer = styled.span`
+  display: grid;
+`;
+
+export const AddressText = styled.span<{ $isVisible: boolean }>`
+  grid-area: 1 / 1;
+  justify-self: center;
+  opacity: ${ifProp('$isVisible', 1, 0)};
+  transform: ${ifProp('$isVisible', 'none', 'translateY(4px)')};
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
 `;

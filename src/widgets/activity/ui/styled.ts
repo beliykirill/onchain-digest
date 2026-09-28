@@ -108,7 +108,7 @@ export const FooterContainer = styled.div`
 `;
 
 export const ToggleButton = styled(Button)`
-  min-height: 40px;
+  margin-right: -8px;
 `;
 
 export const EmptyContainer = styled.div`

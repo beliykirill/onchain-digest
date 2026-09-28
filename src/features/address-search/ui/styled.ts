@@ -37,7 +37,7 @@ export const InputWrapper = styled.div<{ $type: AddressSearchType; $hasError: bo
   display: flex;
   align-items: center;
   min-width: 0;
-  height: ${switchProp('$type', { hero: '56px', compact: '44px' })};
+  height: ${switchProp('$type', { hero: '56px', compact: '52px' })};
   border-radius: 14px;
   border: 1px solid ${ifProp('$hasError', color('negative'), color('surfaceStroke'))};
   background: ${color('surfaceCard')};
@@ -81,8 +81,8 @@ export const TextInput = styled.input<ITextProps>`
 `;
 
 export const PasteButton = styled(Button)`
-  min-height: 36px;
-  margin-right: 4px;
+  min-height: 44px;
+  margin-right: 3px;
   padding: 0 10px;
 `;
 
@@ -126,7 +126,7 @@ export const ExamplesText = styled(CaptionText)`
 `;
 
 export const ExampleButton = styled(Button)`
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 12px;
   border-radius: 999px;
 `;

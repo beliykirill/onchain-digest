@@ -2,7 +2,7 @@ import { type FC, useEffect, useState } from 'react';
 import { shortenAddress } from 'shared/lib';
 import { useWalletParams } from 'shared/lib/hooks';
 import { cdnify } from 'shared/lib/themes';
-import { AddressButton, AddressIcon } from './styled';
+import { AddressButton, AddressIcon, AddressText, AddressTextContainer } from './styled';
 
 export const AddressCopy: FC = () => {
   const { rawAddress } = useWalletParams();
@@ -27,7 +27,10 @@ export const AddressCopy: FC = () => {
 
   return (
     <AddressButton type="button" $type="secondary" title={rawAddress} onClick={handleCopy}>
-      {isCopied ? 'Copied' : shortenAddress(rawAddress)}
+      <AddressTextContainer>
+        <AddressText $isVisible={!isCopied}>{shortenAddress(rawAddress)}</AddressText>
+        <AddressText $isVisible={isCopied}>Copied</AddressText>
+      </AddressTextContainer>
       <AddressIcon
         $icon={cdnify(
           isCopied ? '/static/images/common/check.svg' : '/static/images/common/copy.svg',
