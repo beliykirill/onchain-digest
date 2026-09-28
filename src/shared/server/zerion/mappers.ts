@@ -30,13 +30,17 @@ export const toChain = (id: string, chains: ChainDirectory): IChain =>
     iconUrl: null,
   };
 
+const cleanText = (value: Nullable<string> | undefined) =>
+  value?.replace(/[\u0000-\u001F\u007F\u200B-\u200F\u2060-\u206F\uFEFF]/g, '').trim() ?? '';
+
 export const toAsset = (info: Nullable<ZerionFungibleInfo> | undefined, id: string): IAsset => {
-  const symbol = info?.symbol?.trim() || info?.name?.trim() || '???';
+  const name = cleanText(info?.name);
+  const symbol = cleanText(info?.symbol) || name || '???';
 
   return {
     id: info?.id ?? id,
     symbol,
-    name: info?.name?.trim() || symbol,
+    name: name || symbol,
     iconUrl: info?.icon?.url ?? null,
     verified: info?.flags?.verified ?? false,
   };
