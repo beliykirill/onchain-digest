@@ -5,7 +5,7 @@ import { AppError } from '../errors';
 import { sleep } from '../zerion/throttle';
 import type { ZerionTransport } from '../zerion/transport';
 
-const FIXTURE_WALLETS = ['up', 'down', 'active', 'quiet'] as const;
+const FIXTURE_WALLETS = ['up', 'down', 'active', 'quiet', 'vitalik'] as const;
 type FixtureWallet = (typeof FIXTURE_WALLETS)[number];
 
 interface IFixtureMeta {
@@ -21,14 +21,14 @@ interface IRawList {
   data: { attributes: { mined_at: string } }[];
 }
 
-const DATA_DIR = path.join(process.cwd(), 'src/shared/server/fixtures/data');
 const files = new Map<string, Promise<unknown>>();
 
 const readJson = <T>(relativePath: string): Promise<T> => {
   if (!files.has(relativePath)) {
-    const content = readFile(path.join(DATA_DIR, relativePath), 'utf8').then(
-      (text) => JSON.parse(text) as unknown,
-    );
+    const content = readFile(
+      path.join(process.cwd(), 'src/shared/server/fixtures/data', relativePath),
+      'utf8',
+    ).then((text) => JSON.parse(text) as unknown);
 
     content.catch(() => files.delete(relativePath));
     files.set(relativePath, content);

@@ -223,7 +223,7 @@ describe('getActivitySentence', () => {
     const read = (file: string) =>
       JSON.parse(readFileSync(path.join(dataDir, file), 'utf8')) as { data: unknown[] };
     const chains = toChainDirectory(read('chains.json').data.map((c) => chainSchema.parse(c)));
-    const sentences = ['up', 'down', 'active', 'quiet'].flatMap((wallet) =>
+    const sentences = ['up', 'down', 'active', 'quiet', 'vitalik'].flatMap((wallet) =>
       read(`${wallet}/transactions.json`).data.map((raw) =>
         getActivitySentence(toActivityItem(transactionSchema.parse(raw), chains)),
       ),
