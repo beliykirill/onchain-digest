@@ -19,13 +19,17 @@ accept: application/json
 Confirmed _(live)_. The key is only ever read on the server (`process.env.ZERION_API_KEY`).
 It must **not** use a `NEXT_PUBLIC_` prefix, because Next.js inlines those into the client bundle.
 
+The API sits behind Cloudflare, which **rejects some default user agents** with `403 Error 1010`
+_(live: Python `urllib` was blocked, while curl and Node `fetch` got through)_. The server client always
+sends `User-Agent: since-yesterday/0.1`.
+
 ## Rate limits: stricter than planned
 
-| | Planned (TASK.md) | Actual key _(live)_ |
-|---|---|---|
-| Tier | free | `ratelimit-org-tier: demo` |
-| Per second | 2 | **1** (`ratelimit-org-second-limit: 1`) |
-| Per day | ~3000 | **300** (`ratelimit-org-day-limit: 300`) |
+|            | Planned (TASK.md) | Actual key _(live)_                      |
+| ---------- | ----------------- | ---------------------------------------- |
+| Tier       | free              | `ratelimit-org-tier: demo`               |
+| Per second | 2                 | **1** (`ratelimit-org-second-limit: 1`)  |
+| Per day    | ~3000             | **300** (`ratelimit-org-day-limit: 300`) |
 
 Headers on every response: `RateLimit-Org-{Second,Day,Month}-{Limit,Remaining,Reset}` (reset in seconds),
 `RateLimit-Org-Tier`.
@@ -45,26 +49,32 @@ Consequences for the server client:
 
 - Throttle queue at **1 request / second**, not 2.
 - In-flight de-duplication plus a response cache, so `summary` and `movers` share one `positions` call.
-- A 60 s cache is too short for a 300/day budget during a demo. Proposal: **5 min TTL** (configurable).
+- A 60 s cache is too short for a 300/day budget during a demo. Agreed: **5 min TTL** (`ZERION_CACHE_TTL_SECONDS`).
 
 ## Errors
 
 ```json
-{ "errors": [{ "title": "Malformed parameter was sent",
-               "detail": "wallet address 0xnotanaddress must be a valid EVM or Solana address" }] }
+{
+  "errors": [
+    {
+      "title": "Malformed parameter was sent",
+      "detail": "wallet address 0xnotanaddress must be a valid EVM or Solana address"
+    }
+  ]
+}
 ```
 
 _(live, HTTP 400)_
 
-| Status | Meaning | Retry? |
-|---|---|---|
-| 400 | Malformed parameter (e.g. invalid address) | no |
-| 401 | Missing / invalid key | no |
-| 404 | Resource not found (single-resource endpoints) | no |
-| 422 | Cannot be served (e.g. wallet with > 1M actions) | no |
-| 429 | Throttled | yes, after `RateLimit-Org-Second-Reset` |
-| 500 | Zerion-side error | yes, backoff |
-| 503 | Data still being prepared (fresh wallet), comes with `Retry-After` | yes, honour `Retry-After` |
+| Status | Meaning                                                            | Retry?                                  |
+| ------ | ------------------------------------------------------------------ | --------------------------------------- |
+| 400    | Malformed parameter (e.g. invalid address)                         | no                                      |
+| 401    | Missing / invalid key                                              | no                                      |
+| 404    | Resource not found (single-resource endpoints)                     | no                                      |
+| 422    | Cannot be served (e.g. wallet with > 1M actions)                   | no                                      |
+| 429    | Throttled                                                          | yes, after `RateLimit-Org-Second-Reset` |
+| 500    | Zerion-side error                                                  | yes, backoff                            |
+| 503    | Data still being prepared (fresh wallet), comes with `Retry-After` | yes, honour `Retry-After`               |
 
 ## Endpoints we use
 
@@ -134,6 +144,8 @@ Observed _(live, vitalik.eth)_:
 ```
 
 _(live)_: `day` has 289 points (5 min step), `week` has 337 points (30 min step). Works for Solana.
+The last point is the **end of the current bucket**, so it can sit a few minutes in the future
+(+1.5 min for `day`, +12 min for `week` when captured). The chart clamps it to "now".
 
 ### Fungible chart (for 7d movers): `GET /fungibles/{fungible_id}/charts/{period}`
 
@@ -192,21 +204,21 @@ Observed _(live)_:
 
 #### Sentence mapping (Stage 2)
 
-| `operation_type` | Sentence |
-|---|---|
-| `trade` | `Swapped 0.5 ETH → 1,200 USDC on Uniswap` (out → in; ` on <dapp>` only if known) |
-| `send` | `Sent 100 USDC to 0x12ab…89cd` (`to <dapp>` when there's a bridge/dapp name) |
-| `receive` | `Received 0.2 ETH from 0x12ab…89cd` |
-| `deposit` | `Deposited 1 ETH into Lido` |
-| `withdraw` | `Withdrew 1 ETH from Aave` |
-| `claim` | `Claimed 12 ARB from Arbitrum` |
-| `approve` | `Approved USDC for Uniswap` (`unlimited` above 1e30) |
-| `revoke` | `Revoked USDC approval for Uniswap` |
-| `mint` / `burn` | `Minted …` / `Burned …` |
-| `bid`, `delegate`, `revoke_delegation`, `deploy` | Simple verb + asset/dapp |
-| `execute` | `Interacted with ENS` / `Contract interaction` |
-| anything else / empty | `Transaction on <Chain>` (neutral fallback) |
-| `status: failed` | Prefix `Failed:` with muted styling |
+| `operation_type`                                 | Sentence                                                                         |
+| ------------------------------------------------ | -------------------------------------------------------------------------------- |
+| `trade`                                          | `Swapped 0.5 ETH → 1,200 USDC on Uniswap` (out → in; ` on <dapp>` only if known) |
+| `send`                                           | `Sent 100 USDC to 0x12ab…89cd` (`to <dapp>` when there's a bridge/dapp name)     |
+| `receive`                                        | `Received 0.2 ETH from 0x12ab…89cd`                                              |
+| `deposit`                                        | `Deposited 1 ETH into Lido`                                                      |
+| `withdraw`                                       | `Withdrew 1 ETH from Aave`                                                       |
+| `claim`                                          | `Claimed 12 ARB from Arbitrum`                                                   |
+| `approve`                                        | `Approved USDC for Uniswap` (`unlimited` above 1e30)                             |
+| `revoke`                                         | `Revoked USDC approval for Uniswap`                                              |
+| `mint` / `burn`                                  | `Minted …` / `Burned …`                                                          |
+| `bid`, `delegate`, `revoke_delegation`, `deploy` | Simple verb + asset/dapp                                                         |
+| `execute`                                        | `Interacted with ENS` / `Contract interaction`                                   |
+| anything else / empty                            | `Transaction on <Chain>` (neutral fallback)                                      |
+| `status: failed`                                 | Prefix `Failed:` with muted styling                                              |
 
 ### Chains: `GET /chains/{chain_id}`
 
@@ -233,7 +245,7 @@ for us, since we only use `only_simple`.
 
 ## Gaps and decisions
 
-### Decision 1: the headline has to explain the "why" (proposal)
+### Decision 1: the headline has to explain the "why" (agreed)
 
 `portfolio.changes.absolute_1d` mixes market movement with transfers. On vitalik.eth the headline would
 read "up $313k (+27%)" while every asset he holds actually went **down**, which is exactly the kind of
@@ -262,20 +274,34 @@ contribution. That's acceptable, and it's noted in the UI ("Top holdings, 7d").
 
 ### Request budget per wallet view (demo tier)
 
-| Action | Upstream requests |
-|---|---|
-| Open wallet, 24h | portfolio + positions + chart/day + transactions ≈ **4** (~4 s at 1 RPS) |
-| Switch to 7d | chart/week + transactions(7d) + 5 fungible charts ≈ **7** |
-| Reload within cache TTL | 0 |
+| Action                  | Upstream requests                                                 |
+| ----------------------- | ----------------------------------------------------------------- |
+| Open wallet, 24h        | portfolio + positions + chains + chart/day + transactions = **5** |
+| Switch to 7d            | chart/week + transactions(7d) + 5 fungible charts = **7**         |
+| Reload within cache TTL | 0                                                                 |
 
-About 11 requests per fully explored wallet → roughly 25 wallets a day. Mock mode (`USE_MOCKS=true`)
+About 12 requests per fully explored wallet → roughly 25 wallets a day. Mock mode (`USE_MOCKS=true`)
 is the default for development, and real mode is reserved for demos.
 
-Because of the 1 RPS queue the blocks resolve one after another (~1 s apart) on a cold load. That's a
-natural fit for independent per-block skeletons, and the queue orders requests so the headline comes first.
+_(live, Justin Sun's wallet, cold cache)_: the four routes requested in parallel all resolved in **~7.7 s**
+(5 upstream calls at 1 RPS plus a 4 MB positions payload). The chart came first at 5.9 s. A repeat
+request is answered from cache in 3 ms. Per-block skeletons that resolve independently are therefore
+essential, not decoration.
 
-### Decision 3: example wallets
+### Decision 3: example wallets and fixtures
 
-vitalik.eth is a poor showcase (mostly dust airdrops, and a balance swing driven by transfers). It can stay
-as one example because it demonstrates Decision 1. The other 2 examples get picked in Stage 1 by probing
-a few active wallets (trades, deposits) and are listed here.
+vitalik.eth is a poor showcase (mostly dust airdrops, and a balance swing driven by transfers). Fixtures
+were recorded on 2026-09-28 from four public wallets:
+
+| Fixture  | Address                                      | 24h                     | Why                                                        |
+| -------- | -------------------------------------------- | ----------------------- | ---------------------------------------------------------- |
+| `up`     | `0x3DdfA8eC3052539b6C9549F12cEA2C295cfF5296` | +$57k (+2.2%)           | One clear mover (SPX +$63k)                                |
+| `down`   | `0x176F3DAb24a159341c0509bB36B833E7fdd0a132` | −$9.6M (−0.5%)          | stETH/WBTC drawdown, large numbers for compact formatting  |
+| `active` | `0x020cA66C30beC2c4Fe3861a94E4DB4A498A35872` | −$67                    | 40 txs in 7d: trade, approve, burn, execute, send, receive |
+| `quiet`  | `0x983110309620D911731Ac0932219af06091b6744` | $0 (derived, see below) | No transactions in 7d                                      |
+
+The `quiet` fixture is **derived**: its real responses have price changes zeroed, flat charts, and fungible ids
+prefixed `quiet-` so they don't collide with the other fixtures' price history. Everything else is real JSON,
+with positions trimmed to the 40 largest priced ones plus a few unpriced and dust rows to exercise the filters.
+In mock mode timestamps are shifted so the capture moment becomes "now". Unknown addresses map to a
+fixture deterministically.
