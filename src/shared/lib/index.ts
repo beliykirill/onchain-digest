@@ -1,5 +1,10 @@
 export {
   computeTopMovers,
+  formatPercent,
+  formatRelativeTime,
+  formatTokenAmount,
+  formatUsd,
+  getActivitySentence,
   getAddressKind,
   getContributionUsd,
   isEligibleForMovers,

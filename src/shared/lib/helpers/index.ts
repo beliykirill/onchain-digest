@@ -2,3 +2,6 @@ export { getAddressKind, isValidAddress, normalizeAddress, shortenAddress } from
 export type { AddressKind } from './address';
 export { computeTopMovers, getContributionUsd, isEligibleForMovers } from './compute-top-movers';
 export type { IPositionPeriodChange } from './compute-top-movers';
+export { formatPercent, formatTokenAmount, formatUsd } from './format-number';
+export { formatRelativeTime } from './format-relative-time';
+export { getActivitySentence } from './get-activity-sentence';
