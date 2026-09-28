@@ -109,3 +109,31 @@ theme and primitives are written locally.
 
 → House rule chosen over TASK.md's `aria-live` / roles requirement. Semantics come from native elements
 (`button`, `form`, `label`, `ul`, `time`), and every image keeps `alt`.
+
+## Interface (Stage 3)
+
+### visx + framer-motion for the chart, not Recharts
+
+→ Switching 24h ↔ 7d morphs the existing line into the new one instead of redrawing it. Both series are
+resampled to 120 evenly spaced points, so the SVG path always has the same structure and framer-motion can
+interpolate `d` directly. The tooltip is our own HTML, driven by pointer events, so it works for mouse hover
+and touch drag alike (`touch-action: pan-y` keeps vertical scrolling).
+→ Rejected: Recharts (re-animates from scratch on data change, and its tooltip is harder to style).
+
+### Old data stays on screen while the new period loads
+
+→ Every query uses `placeholderData` that returns the previous result **only for the same address**: a period
+switch keeps the old numbers dimmed to 55% until the new ones arrive, while a different wallet starts from
+skeletons instead of showing someone else's numbers. The headline number tweens from old to new.
+→ Rejected: TanStack's `keepPreviousData` as-is (it would briefly show the previous wallet's data).
+
+### Query retries follow the error, not a blanket count
+
+→ One retry for network, 5xx and timeout errors. None for an invalid address, a 429 or a bad API key: retrying
+can't fix them, and with 300 requests a day retrying a 429 makes things worse. `refetchOnWindowFocus` is off
+for the same reason.
+
+### Chart timestamps are clamped to "now" on the server
+
+→ Zerion's last point is the end of the current bucket (up to ~12 min ahead). Clamping in `getWalletChart`
+keeps the component pure and the "Now" label honest.
