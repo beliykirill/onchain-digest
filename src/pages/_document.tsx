@@ -1,5 +1,6 @@
 import Document, { type DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import { LOCAL_STORAGE } from 'shared/constants';
 
 export default class LandingApp extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -31,7 +32,7 @@ export default class LandingApp extends Document {
           <meta name="theme-color" content="#080a0f" media="(prefers-color-scheme: dark)" />
           <script
             dangerouslySetInnerHTML={{
-              __html: `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`,
+              __html: `try{var t=localStorage.getItem('${LOCAL_STORAGE.THEME}');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`,
             }}
           />
         </Head>

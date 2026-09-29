@@ -4,13 +4,13 @@ import { Button } from 'shared/ui/button';
 import { MainText } from 'shared/ui/text';
 import { ErrorContainer, ErrorText } from './styled';
 
-interface IBlockErrorProps {
+interface BlockErrorProps {
   error: unknown;
   isRetrying: boolean;
   onRetry: () => void;
 }
 
-export const BlockError: FC<IBlockErrorProps> = ({ error, isRetrying, onRetry }) => {
+export const BlockError: FC<BlockErrorProps> = ({ error, isRetrying, onRetry }) => {
   return (
     <ErrorContainer>
       <MainText $textTheme="semi">

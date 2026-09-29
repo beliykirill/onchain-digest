@@ -8,16 +8,16 @@ import {
   ActivityContainer,
   ActivityIcon,
   FailedBadge,
-  MetaText,
+  MetaContainer,
   SentenceText,
   TextContainer,
 } from './styled';
 
-interface IActivityItemProps {
+interface ActivityItemProps {
   item: IActivityItem;
 }
 
-export const ActivityItem: FC<IActivityItemProps> = ({ item }) => {
+export const ActivityItem: FC<ActivityItemProps> = ({ item }) => {
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -30,14 +30,14 @@ export const ActivityItem: FC<IActivityItemProps> = ({ item }) => {
       <ActivityIcon $icon={cdnify(getActivityIcon(item))} />
       <TextContainer>
         <SentenceText>{getActivitySentence(item)}</SentenceText>
-        <MetaText as="div">
-          {item.status === 'failed' && <FailedBadge as="span">Failed</FailedBadge>}
+        <MetaContainer>
+          {item.status === 'failed' && <FailedBadge>Failed</FailedBadge>}
           {item.status === 'pending' && <span>Pending ·</span>}
           <time dateTime={item.minedAt} title={new Date(item.minedAt).toLocaleString('en-US')}>
             {formatRelativeTime(item.minedAt)}
           </time>
           <span>· {item.chain.name}</span>
-        </MetaText>
+        </MetaContainer>
       </TextContainer>
     </ActivityContainer>
   );

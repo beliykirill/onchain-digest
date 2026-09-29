@@ -2,7 +2,7 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import { prop } from 'styled-tools';
 import { color } from 'shared/lib/themes';
-import { type ITextProps, smallTextStyle } from 'shared/ui/text';
+import { type TextProps, smallTextStyle } from 'shared/ui/text';
 
 export const Layout = styled.span<{ $size: number }>`
   position: relative;
@@ -20,8 +20,8 @@ export const TokenImage = styled(Image)`
   background: ${color('surfaceRaised')};
 `;
 
-export const FallbackText = styled.span.attrs<ITextProps>({ $textTheme: 'bold' })<
-  ITextProps & { $hue: number }
+export const FallbackText = styled.span.attrs<TextProps>({ $textTheme: 'bold' })<
+  TextProps & { $hue: number }
 >`
   ${smallTextStyle};
   display: flex;

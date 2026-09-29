@@ -1,6 +1,7 @@
 import type { FC } from 'react';
+import { LOCAL_STORAGE } from 'shared/constants';
 import { cdnify } from 'shared/lib/themes';
-import { HiddenText, ThemeIcon, ToggleButton } from './styled';
+import { HiddenText, ThemeButton, ThemeIcon } from './styled';
 
 export const ThemeToggle: FC = () => {
   const handleToggle = () => {
@@ -12,17 +13,17 @@ export const ThemeToggle: FC = () => {
     root.dataset.theme = next;
 
     try {
-      localStorage.setItem('theme', next);
+      localStorage.setItem(LOCAL_STORAGE.THEME, next);
     } catch {
       return;
     }
   };
 
   return (
-    <ToggleButton type="button" title="Toggle theme" onClick={handleToggle}>
-      <ThemeIcon $theme="light" $icon={cdnify('/static/images/common/moon.svg')} />
-      <ThemeIcon $theme="dark" $icon={cdnify('/static/images/common/sun.svg')} />
+    <ThemeButton type="button" title="Toggle theme" onClick={handleToggle}>
+      <ThemeIcon $type="light" $icon={cdnify('/static/images/common/moon.svg')} />
+      <ThemeIcon $type="dark" $icon={cdnify('/static/images/common/sun.svg')} />
       <HiddenText>Toggle theme</HiddenText>
-    </ToggleButton>
+    </ThemeButton>
   );
 };

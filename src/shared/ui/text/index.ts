@@ -11,6 +11,5 @@ export {
   sectionTextStyle,
   SmallText,
   smallTextStyle,
-} from './ui/styled';
-export type { ITextProps } from './ui/styled';
-export type { TextTheme } from './ui/types';
+} from './styled';
+export type { TextProps } from './styled';

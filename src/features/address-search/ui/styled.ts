@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ifProp, prop, switchProp } from 'styled-tools';
 import { color, media, MediaType } from 'shared/lib/themes';
 import { Button } from 'shared/ui/button';
-import { CaptionText, captionTextStyle, type ITextProps, mainTextStyle } from 'shared/ui/text';
+import { CaptionText, captionTextStyle, type TextProps, mainTextStyle } from 'shared/ui/text';
 import type { AddressSearchType } from './types';
 
 export const Layout = styled.form<{ $type: AddressSearchType }>`
@@ -60,7 +60,7 @@ export const LabelText = styled.label`
   white-space: nowrap;
 `;
 
-export const TextInput = styled.input<ITextProps>`
+export const TextInput = styled.input<TextProps>`
   ${mainTextStyle};
   flex: 1;
   min-width: 0;
@@ -104,7 +104,7 @@ export const SubmitButton = styled(Button)`
   }
 `;
 
-export const ErrorText = styled(motion.p)<ITextProps>`
+export const ErrorText = styled(motion.p)<TextProps>`
   ${captionTextStyle};
   grid-area: error;
   margin-top: 8px;

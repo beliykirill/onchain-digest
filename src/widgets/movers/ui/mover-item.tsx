@@ -16,11 +16,11 @@ import {
   ValueContainer,
 } from './styled';
 
-interface IMoverItemProps {
+interface MoverItemProps {
   mover: IMover;
 }
 
-export const MoverItem: FC<IMoverItemProps> = ({ mover }) => {
+export const MoverItem: FC<MoverItemProps> = ({ mover }) => {
   const shouldReduceMotion = useReducedMotion();
   const isPositive = mover.contributionUsd > 0;
 

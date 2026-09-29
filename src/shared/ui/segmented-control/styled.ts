@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { ifProp } from 'styled-tools';
 import { color, media, MediaType } from 'shared/lib/themes';
-import { captionTextStyle, type ITextProps } from 'shared/ui/text';
+import { captionTextStyle, type TextProps } from 'shared/ui/text';
 
 export const Layout = styled.div`
   display: inline-flex;
@@ -13,8 +13,8 @@ export const Layout = styled.div`
   border: 1px solid ${color('surfaceStroke')};
 `;
 
-export const SegmentButton = styled.button.attrs<ITextProps>({ $textTheme: 'semi' })<
-  ITextProps & { $isActive: boolean }
+export const SegmentButton = styled.button.attrs<TextProps>({ $textTheme: 'semi' })<
+  TextProps & { $isActive: boolean }
 >`
   ${captionTextStyle};
   position: relative;

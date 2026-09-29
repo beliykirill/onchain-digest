@@ -24,7 +24,7 @@ export const PageContainer = styled.main`
   }
 `;
 
-export const ColumnsWrapper = styled.div`
+export const DetailsWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;

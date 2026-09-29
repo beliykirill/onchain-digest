@@ -2,7 +2,7 @@ import { type FC, type KeyboardEvent, type PointerEvent, useId, useMemo, useStat
 import { curveMonotoneX } from '@visx/curve';
 import { scaleLinear } from '@visx/scale';
 import { area, line } from '@visx/shape';
-import { type Transition, useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
 import { formatUsd } from 'shared/lib';
 import { color } from 'shared/lib/themes';
 import type { IChartPoint, Nullable, Period } from 'shared/types';
@@ -18,7 +18,7 @@ import {
   TooltipValueText,
 } from './styled';
 
-interface IChartPlotProps {
+interface ChartPlotProps {
   points: IChartPoint[];
   period: Period;
   width: number;
@@ -26,7 +26,7 @@ interface IChartPlotProps {
   trend: 'up' | 'down' | 'flat';
 }
 
-export const ChartPlot: FC<IChartPlotProps> = ({ points, period, width, height, trend }) => {
+export const ChartPlot: FC<ChartPlotProps> = ({ points, period, width, height, trend }) => {
   const gradientId = `chart-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const shouldReduceMotion = useReducedMotion();
   const [hovered, setHovered] = useState<Nullable<IChartPoint>>(null);
@@ -84,9 +84,6 @@ export const ChartPlot: FC<IChartPlotProps> = ({ points, period, width, height, 
 
   const cursorX = hovered ? xScale(hovered.timestamp) : 0;
   const cursorY = hovered ? yScale(hovered.valueUsd) : 0;
-  const morph: Transition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.4, ease: [0.4, 0, 0.2, 1] };
 
   return (
     <>
@@ -117,7 +114,7 @@ export const ChartPlot: FC<IChartPlotProps> = ({ points, period, width, height, 
           initial={shouldReduceMotion ? false : { opacity: 0, d: areaPath }}
           animate={{ d: areaPath, opacity: 1 }}
           transition={{
-            d: morph,
+            d: shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
             opacity: { duration: shouldReduceMotion ? 0 : 0.5, delay: 0.15 },
           }}
         />
@@ -127,7 +124,7 @@ export const ChartPlot: FC<IChartPlotProps> = ({ points, period, width, height, 
           initial={shouldReduceMotion ? false : { pathLength: 0, d: linePath }}
           animate={{ d: linePath, pathLength: 1 }}
           transition={{
-            d: morph,
+            d: shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
             pathLength: { duration: shouldReduceMotion ? 0 : 0.6, ease: [0.4, 0, 0.2, 1] },
           }}
         />

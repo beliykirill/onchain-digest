@@ -6,7 +6,7 @@ import { Headline } from 'widgets/headline';
 import { Intro } from 'widgets/intro';
 import { Movers } from 'widgets/movers';
 import { useWalletParams } from 'shared/lib/hooks';
-import { ColumnsWrapper, PageContainer, PageLayout } from 'shared/ui/page';
+import { DetailsWrapper, PageContainer, PageLayout } from 'shared/ui/page';
 
 const Home = () => {
   const { rawAddress, address } = useWalletParams();
@@ -19,10 +19,10 @@ const Home = () => {
           <Fragment key={address}>
             <Headline />
             <BalanceChart />
-            <ColumnsWrapper>
+            <DetailsWrapper>
               <Movers />
               <Activity />
-            </ColumnsWrapper>
+            </DetailsWrapper>
           </Fragment>
         ) : (
           <Intro key={rawAddress} />

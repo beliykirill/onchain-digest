@@ -2,7 +2,7 @@ import { type FC, useState } from 'react';
 import type { Nullable } from 'shared/types';
 import { ChainImage, FallbackText, Layout, TokenImage } from './styled';
 
-interface ITokenIconProps {
+interface TokenIconProps {
   symbol: string;
   iconUrl: Nullable<string>;
   chainIconUrl?: Nullable<string>;
@@ -10,7 +10,7 @@ interface ITokenIconProps {
   size?: number;
 }
 
-export const TokenIcon: FC<ITokenIconProps> = ({
+export const TokenIcon: FC<TokenIconProps> = ({
   symbol,
   iconUrl,
   chainIconUrl,

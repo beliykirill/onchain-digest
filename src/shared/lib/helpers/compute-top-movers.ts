@@ -66,8 +66,6 @@ export const computeTopMovers = (
     0,
   );
 
-  // Ranked by the dollar contribution, not by percentage: a $5 token that gained 80% matters
-  // less to the user than $10,000 of ETH that gained 3% ($4 against $300).
   return candidates
     .sort((a, b) => Math.abs(b.contributionUsd) - Math.abs(a.contributionUsd))
     .slice(0, limit)

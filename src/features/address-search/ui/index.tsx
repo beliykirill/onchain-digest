@@ -19,11 +19,11 @@ import {
 } from './styled';
 import type { AddressSearchType } from './types';
 
-interface IAddressSearchProps {
+interface AddressSearchProps {
   type: AddressSearchType;
 }
 
-export const AddressSearch: FC<IAddressSearchProps> = ({ type }) => {
+export const AddressSearch: FC<AddressSearchProps> = ({ type }) => {
   const inputId = useId();
   const shouldReduceMotion = useReducedMotion();
   const { rawAddress, address, setAddress } = useWalletParams();

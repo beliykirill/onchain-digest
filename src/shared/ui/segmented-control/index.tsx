@@ -3,7 +3,7 @@ import { useReducedMotion } from 'framer-motion';
 import { Layout, SegmentButton, SegmentIndicator, SegmentText } from './styled';
 import type { ISegmentOption } from './types';
 
-interface ISegmentedControlProps<T extends string> {
+interface SegmentedControlProps<T extends string> {
   options: ISegmentOption<T>[];
   value: T;
   onChange: (value: T) => void;
@@ -13,7 +13,7 @@ export const SegmentedControl = <T extends string>({
   options,
   value,
   onChange,
-}: ISegmentedControlProps<T>) => {
+}: SegmentedControlProps<T>) => {
   const layoutId = useId();
   const shouldReduceMotion = useReducedMotion();
   const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);

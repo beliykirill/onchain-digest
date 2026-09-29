@@ -60,10 +60,3 @@ export const PALETTE: Record<PaletteFamily, Record<PaletteStep, string>> = {
     1000: '18 16 46',
   },
 };
-
-export const palette = (path: PalettePath, opacity = 1): string => {
-  const [family, step] = path.split('.') as [PaletteFamily, `${PaletteStep}`];
-  const rgb = PALETTE[family][Number(step) as PaletteStep];
-
-  return opacity === 1 ? `rgb(${rgb})` : `rgb(${rgb} / ${opacity})`;
-};

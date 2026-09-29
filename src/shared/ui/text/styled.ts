@@ -3,7 +3,7 @@ import { switchProp } from 'styled-tools';
 import { color, media, MediaType } from 'shared/lib/themes';
 import type { TextTheme } from './types';
 
-export interface ITextProps {
+export interface TextProps {
   $textTheme?: TextTheme;
 }
 
@@ -42,7 +42,7 @@ export const sectionTextStyle = css`
   }
 `;
 
-export const mainTextStyle = css<ITextProps>`
+export const mainTextStyle = css<TextProps>`
   margin: 0;
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 16px;
@@ -51,7 +51,7 @@ export const mainTextStyle = css<ITextProps>`
   color: ${color('textMain')};
 `;
 
-export const secondaryTextStyle = css<ITextProps>`
+export const secondaryTextStyle = css<TextProps>`
   margin: 0;
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 15px;
@@ -65,7 +65,7 @@ export const secondaryTextStyle = css<ITextProps>`
   }
 `;
 
-export const captionTextStyle = css<ITextProps>`
+export const captionTextStyle = css<TextProps>`
   margin: 0;
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 13px;
@@ -74,7 +74,7 @@ export const captionTextStyle = css<ITextProps>`
   color: ${color('textMuted')};
 `;
 
-export const smallTextStyle = css<ITextProps>`
+export const smallTextStyle = css<TextProps>`
   margin: 0;
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 12px;
@@ -91,18 +91,18 @@ export const SectionText = styled.h2`
   ${sectionTextStyle};
 `;
 
-export const MainText = styled.p<ITextProps>`
+export const MainText = styled.p<TextProps>`
   ${mainTextStyle};
 `;
 
-export const SecondaryText = styled.p<ITextProps>`
+export const SecondaryText = styled.p<TextProps>`
   ${secondaryTextStyle};
 `;
 
-export const CaptionText = styled.p<ITextProps>`
+export const CaptionText = styled.p<TextProps>`
   ${captionTextStyle};
 `;
 
-export const SmallText = styled.p<ITextProps>`
+export const SmallText = styled.p<TextProps>`
   ${smallTextStyle};
 `;

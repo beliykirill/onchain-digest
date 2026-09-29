@@ -12,8 +12,8 @@ import {
   HeaderContainer,
   Layout,
   SkeletonContainer,
+  ShowAllButton,
   SkeletonWrapper,
-  ToggleButton,
 } from './styled';
 
 export const Activity: FC = () => {
@@ -78,13 +78,13 @@ export const Activity: FC = () => {
                 .join(' · ')}
             </CaptionText>
             {items.length > 8 && (
-              <ToggleButton
+              <ShowAllButton
                 type="button"
                 $type="ghost"
                 onClick={() => setIsExpanded((current) => !current)}
               >
                 {isExpanded ? 'Show less' : `Show all (${items.length})`}
-              </ToggleButton>
+              </ShowAllButton>
             )}
           </FooterContainer>
         </>

@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ApiError } from 'shared/lib/api';
-import { GlobalStyle } from 'shared/ui/global-style';
+import { GlobalStyle } from 'shared/ui/global';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
 

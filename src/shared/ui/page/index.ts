@@ -1,1 +1,1 @@
-export { ColumnsWrapper, PageContainer, PageLayout } from './ui/styled';
+export { DetailsWrapper, PageContainer, PageLayout } from './styled';

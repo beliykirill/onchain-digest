@@ -4,7 +4,13 @@ import { ifProp, prop } from 'styled-tools';
 import { color, media, MediaType } from 'shared/lib/themes';
 import { cardSurfaceStyle, numericStyle } from 'shared/ui/atoms';
 import { Button } from 'shared/ui/button';
-import { CaptionText, SecondaryText, SmallText } from 'shared/ui/text';
+import {
+  CaptionText,
+  captionTextStyle,
+  SecondaryText,
+  smallTextStyle,
+  type TextProps,
+} from 'shared/ui/text';
 
 export const Layout = styled.section`
   ${cardSurfaceStyle};
@@ -85,14 +91,16 @@ export const SentenceText = styled(SecondaryText)`
   overflow-wrap: anywhere;
 `;
 
-export const MetaText = styled(CaptionText)`
+export const MetaContainer = styled.div<TextProps>`
+  ${captionTextStyle};
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
 `;
 
-export const FailedBadge = styled(SmallText)`
+export const FailedBadge = styled.span<TextProps>`
+  ${smallTextStyle};
   padding: 1px 6px;
   border-radius: 6px;
   background: ${color('negative', 0.12)};
@@ -107,7 +115,7 @@ export const FooterContainer = styled.div`
   gap: 8px;
 `;
 
-export const ToggleButton = styled(Button)`
+export const ShowAllButton = styled(Button)`
   margin-right: -8px;
 `;
 

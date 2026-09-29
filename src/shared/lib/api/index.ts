@@ -1,2 +1,2 @@
-export { ApiError, createEndpoint } from './core';
+export { ApiError } from './core';
 export { walletAPI } from './wallet';

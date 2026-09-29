@@ -1,1 +1,1 @@
-export { Skeleton } from './ui/styled';
+export { Skeleton } from './styled';

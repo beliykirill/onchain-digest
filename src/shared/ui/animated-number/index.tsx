@@ -2,12 +2,12 @@ import { type FC, useEffect, useRef } from 'react';
 import { animate, useReducedMotion } from 'framer-motion';
 import { NumberText } from './styled';
 
-interface IAnimatedNumberProps {
+interface AnimatedNumberProps {
   value: number;
   format: (value: number) => string;
 }
 
-export const AnimatedNumber: FC<IAnimatedNumberProps> = ({ value, format }) => {
+export const AnimatedNumber: FC<AnimatedNumberProps> = ({ value, format }) => {
   const nodeRef = useRef<HTMLSpanElement>(null);
   const currentRef = useRef(0);
   const shouldReduceMotion = useReducedMotion();

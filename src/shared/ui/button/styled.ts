@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { switchProp } from 'styled-tools';
 import { color, media, MediaType } from 'shared/lib/themes';
-import { captionTextStyle, type ITextProps } from 'shared/ui/text';
+import { captionTextStyle, type TextProps } from 'shared/ui/text';
 import type { ButtonType } from './types';
 
-export const Button = styled.button.attrs<ITextProps>({ $textTheme: 'semi' })<
-  ITextProps & { $type?: ButtonType }
+export const Button = styled.button.attrs<TextProps>({ $textTheme: 'semi' })<
+  TextProps & { $type?: ButtonType }
 >`
   ${captionTextStyle};
   display: inline-flex;

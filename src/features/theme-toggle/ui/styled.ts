@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { prop, switchProp } from 'styled-tools';
 import { color, media, MediaType } from 'shared/lib/themes';
+import type { ThemeIconType } from './types';
 
-export const ToggleButton = styled.button`
+export const ThemeButton = styled.button`
   position: relative;
   display: inline-flex;
   flex-shrink: 0;
@@ -32,27 +33,27 @@ export const ToggleButton = styled.button`
   }
 `;
 
-export const ThemeIcon = styled.span<{ $icon: string; $theme: 'light' | 'dark' }>`
+export const ThemeIcon = styled.span<{ $icon: string; $type: ThemeIconType }>`
   position: absolute;
   width: 18px;
   height: 18px;
   background: currentColor;
   mask: url(${prop('$icon')}) no-repeat center / contain;
-  opacity: ${switchProp('$theme', { light: 1, dark: 0 })};
-  transform: ${switchProp('$theme', { light: 'none', dark: 'rotate(-90deg) scale(0.6)' })};
+  opacity: ${switchProp('$type', { light: 1, dark: 0 })};
+  transform: ${switchProp('$type', { light: 'none', dark: 'rotate(-90deg) scale(0.6)' })};
   transition:
     opacity 0.2s ease,
     transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   :root[data-theme='dark'] & {
-    opacity: ${switchProp('$theme', { light: 0, dark: 1 })};
-    transform: ${switchProp('$theme', { light: 'rotate(90deg) scale(0.6)', dark: 'none' })};
+    opacity: ${switchProp('$type', { light: 0, dark: 1 })};
+    transform: ${switchProp('$type', { light: 'rotate(90deg) scale(0.6)', dark: 'none' })};
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) & {
-      opacity: ${switchProp('$theme', { light: 0, dark: 1 })};
-      transform: ${switchProp('$theme', { light: 'rotate(90deg) scale(0.6)', dark: 'none' })};
+      opacity: ${switchProp('$type', { light: 0, dark: 1 })};
+      transform: ${switchProp('$type', { light: 'rotate(90deg) scale(0.6)', dark: 'none' })};
     }
   }
 `;
