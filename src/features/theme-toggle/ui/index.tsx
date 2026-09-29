@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { LOCAL_STORAGE } from 'shared/constants';
+import { LOCAL_STORAGE_VARIABLES } from 'shared/constants';
 import { cdnify } from 'shared/lib/themes';
 import { HiddenText, ThemeButton, ThemeIcon } from './styled';
 
@@ -13,7 +13,7 @@ export const ThemeToggle: FC = () => {
     root.dataset.theme = next;
 
     try {
-      localStorage.setItem(LOCAL_STORAGE.THEME, next);
+      localStorage.setItem(LOCAL_STORAGE_VARIABLES.THEME, next);
     } catch {
       return;
     }

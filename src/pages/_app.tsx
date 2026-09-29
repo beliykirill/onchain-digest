@@ -33,7 +33,9 @@ const App = ({ Component, pageProps }: AppProps) => {
           content="What changed in a crypto wallet over the last 24 hours, and why. Built on the Zerion API."
         />
       </Head>
+
       <GlobalStyle />
+
       <div className={inter.variable}>
         <Component {...pageProps} />
       </div>

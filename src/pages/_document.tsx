@@ -1,6 +1,6 @@
 import Document, { type DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
-import { LOCAL_STORAGE } from 'shared/constants';
+import { LOCAL_STORAGE_VARIABLES } from 'shared/constants';
 import { cdnify } from 'shared/lib/themes';
 
 export default class LandingApp extends Document {
@@ -35,10 +35,11 @@ export default class LandingApp extends Document {
           <meta name="theme-color" content="#080a0f" media="(prefers-color-scheme: dark)" />
           <script
             dangerouslySetInnerHTML={{
-              __html: `try{var t=localStorage.getItem('${LOCAL_STORAGE.THEME}');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`,
+              __html: `try{var t=localStorage.getItem('${LOCAL_STORAGE_VARIABLES.THEME}');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`,
             }}
           />
         </Head>
+
         <body>
           <Main />
           <NextScript />
