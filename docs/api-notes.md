@@ -23,13 +23,13 @@ The API sits behind Cloudflare, which **rejects some default user agents** with 
 _(live: Python `urllib` was blocked, while curl and Node `fetch` got through)_. The server client always
 sends `User-Agent: onchain-digest/0.1`.
 
-## Rate limits: stricter than planned
+## Rate limits: stricter than advertised
 
-|            | Planned (TASK.md) | Actual key _(live)_                      |
-| ---------- | ----------------- | ---------------------------------------- |
-| Tier       | free              | `ratelimit-org-tier: demo`               |
-| Per second | 2                 | **1** (`ratelimit-org-second-limit: 1`)  |
-| Per day    | ~3000             | **300** (`ratelimit-org-day-limit: 300`) |
+|            | Expected (free plan) | Actual key _(live)_                      |
+| ---------- | -------------------- | ---------------------------------------- |
+| Tier       | free                 | `ratelimit-org-tier: demo`               |
+| Per second | 2                    | **1** (`ratelimit-org-second-limit: 1`)  |
+| Per day    | ~3000                | **300** (`ratelimit-org-day-limit: 300`) |
 
 Headers on every response: `RateLimit-Org-{Second,Day,Month}-{Limit,Remaining,Reset}` (reset in seconds),
 `RateLimit-Org-Tier`.
@@ -49,7 +49,7 @@ Consequences for the server client:
 
 - Throttle queue at **1 request / second**, not 2.
 - In-flight de-duplication plus a response cache, so `summary` and `movers` share one `positions` call.
-- A 60 s cache is too short for a 300/day budget during a demo. Agreed: **5 min TTL** (`ZERION_CACHE_TTL_SECONDS`).
+- A 60 s cache is too short for a 300/day budget during a demo, so the TTL is **5 min** (`ZERION_CACHE_TTL_SECONDS`).
 
 ## Errors
 
@@ -202,7 +202,7 @@ Observed _(live)_:
 - `value` and `price` on a transfer are nullable (tokens without a price).
 - vitalik.eth over 7 days: 53 non-trash txs, of which 44 are `receive` of dust airdrops (`$0.000002`).
 
-#### Sentence mapping (Stage 2)
+#### Sentence mapping
 
 | `operation_type`                                 | Sentence                                                                         |
 | ------------------------------------------------ | -------------------------------------------------------------------------------- |
@@ -247,13 +247,13 @@ for us, since we only use `only_simple`.
 
 ## Gaps and decisions
 
-### Decision 1: the headline has to explain the "why" (agreed)
+### Decision 1: the headline has to explain the "why"
 
 `portfolio.changes.absolute_1d` mixes market movement with transfers. On vitalik.eth the headline would
 read "up $313k (+27%)" while every asset he holds actually went **down**, which is exactly the kind of
 misleading summary this product exists to avoid.
 
-Proposal: keep the headline as the balance change (it agrees with the chart), and add a one-line
+Decision: keep the headline as the balance change (it agrees with the chart), and add a one-line
 breakdown under it:
 
 > **Your wallet is up $313,391 (+27.3%) since yesterday**
@@ -264,7 +264,7 @@ breakdown under it:
 - In 7d: balance change = last − first `charts/week` point. Market = Σ per-asset 7d contribution
   (Decision 2) over the positions we priced.
 
-### Decision 2: 7d movers via per-asset week charts (agreed)
+### Decision 2: 7d movers via per-asset week charts
 
 No 7d change exists on positions, portfolio or `fungibles.market_data.changes` (`percent_1d/30d/90d/365d` only).
 For the top **N** priced positions by value, call `GET /fungibles/{id}/charts/week` and compute

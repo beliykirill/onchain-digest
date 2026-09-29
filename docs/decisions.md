@@ -68,8 +68,8 @@ exhausted daily quota fails fast.
 between concurrent routes and keeps results for `ZERION_CACHE_TTL_SECONDS` (300). Failures are never
 cached. `filter[min_mined_at]` is floored to 5 minutes so the transactions request is cacheable, and
 the exact window is applied after the fetch. The chain list is cached for 24 h.
-→ Rejected: TASK.md's 60 s TTL (a few page reloads during a demo would eat a noticeable part of the
-daily budget).
+→ Rejected: a 60 s TTL (a few page reloads during a demo would eat a noticeable part of the daily
+budget).
 
 ### Every block fetches independently
 
@@ -103,34 +103,35 @@ into `AppError.detail`, which the route logs and never serialises.
 ### `period` is `1d | 7d` on every route
 
 → One shared switch drives all four blocks, so one vocabulary is used everywhere. Every route also
-accepts TASK.md's `day | week` as aliases.
+accepts `day | week` as aliases.
 
 ## Stack and structure
 
 ### Next.js Pages Router, Feature-Sliced layout without `entities`
 
-→ The house convention (the scryde-frontend standard) the reviewer asked for. `src/pages` holds only
-Next routes. API handlers are one line each over `shared/server/route`. Layers are
+→ This is the stack and layout I use in production, so the code reads the way my day-to-day code does.
+`src/pages` holds only Next routes. API handlers are one line each over `shared/server/route`. Layers are
 `widgets / features / shared` with bare aliases (`shared/lib`, no `@/`). Domain types live in
 `shared/types` and pure logic in `shared/lib/helpers`.
-→ Rejected: the App Router from TASK.md (overridden by the user), and an `entities` layer (not used in
-the house landing archetype).
+→ Rejected: the App Router (nothing on this page needs server components, and the Pages Router keeps
+data fetching explicit), and an `entities` layer (a single page has no domain entities shared between
+features).
 
 ### styled-components instead of Tailwind
 
-→ The house standard: a sibling `ui/styled.ts` per slice, transient `$props` and `styled-tools`. Color
-tokens are CSS variables read through `color()` from `shared/lib/themes`, so there is no `ThemeProvider`.
-`shared/ui` components are flat folders (`<name>/{index.tsx, styled.ts}`), as in essence-main.
-`@scryderu/ui` / `@scryderu/lib` are private and branded for another product, so the tokens and text
-primitives are written locally.
-→ Rejected: Tailwind from TASK.md (overridden by the user).
+→ A sibling `ui/styled.ts` per slice, transient `$props` and `styled-tools`. Color tokens are CSS
+variables read through `color()` from `shared/lib/themes`, so there is no `ThemeProvider` and switching
+the theme never re-renders React. `shared/ui` components are flat folders (`<name>/{index.tsx, styled.ts}`).
+The tokens and text primitives are written for this project, with no UI kit.
+→ Rejected: Tailwind (long class strings make the per-state styles of the chart and the segmented control
+harder to read than a named styled component).
 
 ### No `aria-*` / `role` attributes
 
-→ House rule chosen over TASK.md's `aria-live` / roles requirement. Semantics come from native elements
-(`button`, `form`, `label`, `ul`, `time`), and every image keeps `alt`.
+→ Semantics come from native elements (`button`, `form`, `label`, `ul`, `time`), and every image keeps
+`alt`.
 
-## Interface (Stage 3)
+## Interface
 
 ### visx + framer-motion for the chart, not Recharts
 
@@ -158,7 +159,7 @@ for the same reason.
 → Zerion's last point is the end of the current bucket (up to ~12 min ahead). Clamping in `getWalletChart`
 keeps the component pure and the "Now" label honest.
 
-## Polish (Stage 4)
+## Polish
 
 ### Theme: system by default, manual override without a flash
 

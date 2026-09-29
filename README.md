@@ -2,6 +2,8 @@
 
 A 24-hour wallet digest built with the Zerion API.
 
+**Live demo:** [onchain-digest.vercel.app](https://onchain-digest.vercel.app/)
+
 ![onchain-digest: vitalik.eth in dark mode](docs/screenshot.webp)
 
 ## Why
