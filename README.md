@@ -51,7 +51,7 @@ The key is only read by the Next.js API routes and never reaches the browser. Th
 per second and 300 per day, so the server queues requests and caches responses for 5 minutes.
 
 ```bash
-pnpm lint && pnpm typecheck && pnpm test
+pnpm lint && pnpm typecheck
 ```
 
 ## Key product decisions
@@ -73,7 +73,7 @@ More in [`docs/decisions.md`](docs/decisions.md). API findings (real limits, res
 ## Stack
 
 Next.js (Pages Router) · TypeScript strict · TanStack Query · styled-components + styled-tools ·
-framer-motion · visx · Zod · Vitest. The code follows a Feature-Sliced layout: `pages` → `widgets` →
+framer-motion · visx · Zod. The code follows a Feature-Sliced layout: `pages` → `widgets` →
 `features` → `shared`. All Zerion access lives in `src/shared/server`.
 
 ## What I'd add next
