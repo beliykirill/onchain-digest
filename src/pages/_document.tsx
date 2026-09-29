@@ -1,6 +1,7 @@
 import Document, { type DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 import { LOCAL_STORAGE } from 'shared/constants';
+import { cdnify } from 'shared/lib/themes';
 
 export default class LandingApp extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -28,6 +29,8 @@ export default class LandingApp extends Document {
     return (
       <Html lang="en">
         <Head>
+          <link rel="icon" href={cdnify('/favicon.ico')} sizes="32x32" />
+          <link rel="icon" href={cdnify('/favicon.svg')} type="image/svg+xml" />
           <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)" />
           <meta name="theme-color" content="#080a0f" media="(prefers-color-scheme: dark)" />
           <script
