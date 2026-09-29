@@ -3,7 +3,10 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   compiler: {
-    styledComponents: true,
+    styledComponents: {
+      ssr: true,
+      displayName: process.env.NODE_ENV !== 'production',
+    },
   },
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '**' }],
