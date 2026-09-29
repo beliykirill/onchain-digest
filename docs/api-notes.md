@@ -216,14 +216,14 @@ Observed _(live)_:
 | `revoke`                                         | `Revoked USDC approval for Uniswap`                                              |
 | `mint` / `burn`                                  | `Minted …` / `Burned …`                                                          |
 | `bid`, `delegate`, `revoke_delegation`, `deploy` | Simple verb + asset/dapp                                                         |
-| `execute`                                        | `Interacted with ENS` / `Contract interaction`                                   |
+| `execute`                                        | `Interacted with ENS` / `Contract interaction on <Chain>`                        |
 | anything else / empty                            | `Transaction on <Chain>` (neutral fallback)                                      |
-| `status: failed`                                 | Prefix `Failed:` with muted styling                                              |
+| `status: failed`                                 | `Failed` badge next to the time, muted row                                       |
 
-### Chains: `GET /chains/{chain_id}`
+### Chains: `GET /chains/`
 
-Returns `name`, `icon.url`, `explorer`, `external_id`. Needed for the network name and icon. The list is
-static, so cache it for 24 h (or hard-code the ~10 most common names and fall back to the id).
+Returns `name`, `icon.url`, `explorer`, `external_id` for every chain. Needed for the network name and icon.
+The list is static, so it is fetched once and cached for 24 h.
 
 ## Spam / junk filtering
 
@@ -234,6 +234,8 @@ static, so cache it for 24 h (or hard-code the ~10 most common names and fall ba
   airdrops. Our own filter for movers: `!is_trash && value >= $1 (MIN_POSITION_VALUE_USD) && changes != null`.
 - `fungible_info.flags.verified` is too strict to filter on (ETH-side memecoins with real markets are
   unverified). Show it at most as a hint.
+- Unverified tokens with an extreme price move (≥ 500% over the period, or a price that started at $0) are
+  reported apart from the market. See "Unverified price spikes" in `decisions.md`.
 
 ## Solana
 
@@ -270,7 +272,8 @@ For the top **N** priced positions by value, call `GET /fungibles/{id}/charts/we
 
 Cost at the demo tier: N extra requests, ~N seconds at 1 RPS. We cap N at **5** (the movers list size)
 instead of 8. Ranking by value first means a small position could in theory outrank a large one on
-contribution. That's acceptable, and it's noted in the UI ("Top holdings, 7d").
+contribution. That's acceptable, and it's noted in the UI ("Your 5 largest holdings, by $ impact").
+When `stats.first` is 0 (the token had no price a week ago), the whole current value counts as the change.
 
 ### Request budget per wallet view (demo tier)
 

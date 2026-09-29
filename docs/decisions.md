@@ -93,10 +93,17 @@ with the API.
 → Rejected: keeping recorded fixtures as a fallback (a demo that silently shows yesterday's numbers is worse
 than an honest error state).
 
+### Client error messages are generic, details stay in the server log
+
+→ The browser only gets a neutral message per error code ("Wallet data is temporarily unavailable. Try again
+later."). What actually went wrong (a missing `ZERION_API_KEY`, a rejected key, an exhausted daily quota) goes
+into `AppError.detail`, which the route logs and never serialises.
+→ Rejected: forwarding the upstream or configuration message (it leaks setup details to every visitor).
+
 ### `period` is `1d | 7d` on every route
 
-→ One shared switch drives all four blocks, so one vocabulary is used everywhere. `/chart` also accepts
-TASK.md's `day | week` as aliases.
+→ One shared switch drives all four blocks, so one vocabulary is used everywhere. Every route also
+accepts TASK.md's `day | week` as aliases.
 
 ## Stack and structure
 
@@ -111,9 +118,11 @@ the house landing archetype).
 
 ### styled-components instead of Tailwind
 
-→ The house standard: a sibling `ui/styled.ts` per slice, transient `$props`, `styled-tools`, and a theme
-object for tokens. `@scryderu/ui` / `@scryderu/lib` are private and branded for another product, so the
-theme and primitives are written locally.
+→ The house standard: a sibling `ui/styled.ts` per slice, transient `$props` and `styled-tools`. Color
+tokens are CSS variables read through `color()` from `shared/lib/themes`, so there is no `ThemeProvider`.
+`shared/ui` components are flat folders (`<name>/{index.tsx, styled.ts}`), as in essence-main.
+`@scryderu/ui` / `@scryderu/lib` are private and branded for another product, so the tokens and text
+primitives are written locally.
 → Rejected: Tailwind from TASK.md (overridden by the user).
 
 ### No `aria-*` / `role` attributes
@@ -134,7 +143,7 @@ and touch drag alike (`touch-action: pan-y` keeps vertical scrolling).
 ### Old data stays on screen while the new period loads
 
 → Every query uses `placeholderData` that returns the previous result **only for the same address**: a period
-switch keeps the old numbers dimmed to 55% until the new ones arrive, while a different wallet starts from
+switch keeps the old numbers dimmed until the new ones arrive, while a different wallet starts from
 skeletons instead of showing someone else's numbers. The headline number tweens from old to new.
 → Rejected: TanStack's `keepPreviousData` as-is (it would briefly show the previous wallet's data).
 
@@ -158,6 +167,15 @@ script in `_document` applies the saved choice before first paint, and the toggl
 so the server never needs to know the theme and there is no hydration mismatch.
 → Rejected: a theme in React state or context (flashes the wrong theme on load).
 
+### A shimmering page glow behind a floating glass header
+
+→ A fixed layer behind the content: a blurred conic ring in the positive / accent / negative colors rotates
+slowly and a second spot breathes on top, so the colors keep flowing into each other. Only `transform` and
+`opacity` animate, and the global reduced-motion rule freezes it. The header is a glass panel the width of the
+content, so the glow shows through it instead of ending at an opaque bar.
+→ Rejected: a glow on the start screen only (the digest looked flat next to it), and a full-width opaque
+header (it cut the glow off).
+
 ### The chart is operable from the keyboard
 
 → The plot is focusable: focus shows the latest point, ←/→ scrub through time, Home/End jump to the ends. It
@@ -165,6 +183,7 @@ reuses the pointer tooltip, so there is one code path for mouse, touch and keybo
 
 ### Measured, not assumed
 
-→ Lighthouse (production build, recorded data): Performance 100 / Accessibility 100 / Best Practices 100 / SEO 100
+→ Lighthouse, measured on 2026-09-28 on a production build, before the page glow and the glass header were
+added (re-run it before quoting these numbers): Performance 100 / Accessibility 100 / Best Practices 100 / SEO 100
 on desktop, and 94–96 / 100 / 100 / 100 on mobile with throttling. CLS is 0 on desktop and 0.015 on mobile. All
 controls are at least 44 px tall. Text and background pairs are at least 4.5:1 in both themes.
