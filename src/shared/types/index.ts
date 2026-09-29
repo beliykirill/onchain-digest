@@ -20,5 +20,4 @@ export type {
   TransactionStatus,
   TransferDirection,
 } from './wallet';
-export { API_ERROR_CODES } from './api';
 export type { ApiErrorCode, IApiErrorBody } from './api';

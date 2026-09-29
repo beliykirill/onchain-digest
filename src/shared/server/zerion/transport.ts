@@ -47,7 +47,7 @@ export const createHttpTransport = ({
   return async ({ path, params = {} }) => {
     if (!authorization) {
       throw new AppError('UNAUTHORIZED', {
-        detail: 'ZERION_API_KEY is not set. Add it to .env.local or run with USE_MOCKS=true.',
+        detail: 'ZERION_API_KEY is not set. Add it to .env.local.',
       });
     }
 
@@ -89,8 +89,7 @@ export const createHttpTransport = ({
         if (response.headers.get('ratelimit-org-day-remaining') === '0') {
           throw new AppError('RATE_LIMITED', {
             message: 'We’ve hit today’s data limit. Try again later.',
-            detail:
-              'Zerion daily quota is exhausted. Switch to USE_MOCKS=true or wait for the reset.',
+            detail: 'Zerion daily quota is exhausted until the daily reset.',
             retryAfterSeconds: readSeconds(response, 'ratelimit-org-day-reset'),
           });
         }

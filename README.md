@@ -25,27 +25,18 @@ pnpm install
 cp .env.example .env.local
 ```
 
-**With mocks (no key needed).** Every API route answers from fixtures recorded from real Zerion responses:
+Get a key at [dashboard.zerion.io](https://dashboard.zerion.io) and put it in `.env.local`:
 
 ```bash
 # .env.local
-USE_MOCKS=true
+ZERION_API_KEY=zk_...
 ```
 
 ```bash
 pnpm dev   # http://localhost:3000
 ```
 
-Try the example wallets on the start screen. To see the error states, set for example
-`MOCK_FAIL=chart:RATE_LIMITED,movers:UPSTREAM_ERROR`. `MOCK_LATENCY_MS` controls how long the skeletons stay up.
-
-**With a real key.** Get one at [dashboard.zerion.io](https://dashboard.zerion.io):
-
-```bash
-# .env.local
-ZERION_API_KEY=zk_...
-USE_MOCKS=false
-```
+Try the example wallets on the start screen.
 
 The key is only read by the Next.js API routes and never reaches the browser. The demo tier allows 1 request
 per second and 300 per day, so the server queues requests and caches responses for 5 minutes.

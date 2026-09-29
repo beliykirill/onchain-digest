@@ -1,7 +1,6 @@
 import type { ZodType } from 'zod';
 import { getServerEnv } from '../env';
 import { AppError } from '../errors';
-import { mockTransport } from '../fixtures';
 import { getCacheKey, TtlCache } from './cache';
 import { createThrottle } from './throttle';
 import { createHttpTransport, type ZerionTransport } from './transport';
@@ -40,13 +39,11 @@ const globalForZerion = globalThis as typeof globalThis & { zerionClient?: IZeri
 export const getZerionClient = (): IZerionClient => {
   if (!globalForZerion.zerionClient) {
     const env = getServerEnv();
-    const transport = env.useMocks
-      ? mockTransport
-      : createHttpTransport({
-          apiKey: env.zerionApiKey,
-          timeoutMs: env.requestTimeoutMs,
-          throttle: createThrottle(Math.ceil(1000 / env.requestsPerSecond) + 50),
-        });
+    const transport = createHttpTransport({
+      apiKey: env.zerionApiKey,
+      timeoutMs: env.requestTimeoutMs,
+      throttle: createThrottle(Math.ceil(1000 / env.requestsPerSecond) + 50),
+    });
 
     globalForZerion.zerionClient = createZerionClient(transport, new TtlCache(env.cacheTtlMs));
   }

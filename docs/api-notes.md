@@ -280,28 +280,24 @@ contribution. That's acceptable, and it's noted in the UI ("Top holdings, 7d").
 | Switch to 7d            | chart/week + transactions(7d) + 5 fungible charts = **7**         |
 | Reload within cache TTL | 0                                                                 |
 
-About 12 requests per fully explored wallet → roughly 25 wallets a day. Mock mode (`USE_MOCKS=true`)
-is the default for development, and real mode is reserved for demos.
+About 12 requests per fully explored wallet → roughly 25 wallets a day.
 
 _(live, Justin Sun's wallet, cold cache)_: the four routes requested in parallel all resolved in **~7.7 s**
 (5 upstream calls at 1 RPS plus a 4 MB positions payload). The chart came first at 5.9 s. A repeat
 request is answered from cache in 3 ms. Per-block skeletons that resolve independently are therefore
 essential, not decoration.
 
-### Decision 3: example wallets and fixtures
+### Decision 3: example wallets
 
-vitalik.eth is a poor showcase (mostly dust airdrops, and a balance swing driven by transfers). Fixtures
-were recorded on 2026-09-28 from four public wallets:
+vitalik.eth is a poor showcase (mostly dust airdrops, and a balance swing driven by transfers). Candidate
+wallets checked on 2026-09-28:
 
-| Fixture  | Address                                      | 24h                     | Why                                                        |
-| -------- | -------------------------------------------- | ----------------------- | ---------------------------------------------------------- |
-| `up`     | `0x3DdfA8eC3052539b6C9549F12cEA2C295cfF5296` | +$57k (+2.2%)           | One clear mover (SPX +$63k)                                |
-| `down`   | `0x176F3DAb24a159341c0509bB36B833E7fdd0a132` | −$9.6M (−0.5%)          | stETH/WBTC drawdown, large numbers for compact formatting  |
-| `active` | `0x020cA66C30beC2c4Fe3861a94E4DB4A498A35872` | −$67                    | 40 txs in 7d: trade, approve, burn, execute, send, receive |
-| `quiet`  | `0x983110309620D911731Ac0932219af06091b6744` | $0 (derived, see below) | No transactions in 7d                                      |
+| Wallet   | Address                                      | 24h            | Why                                                        |
+| -------- | -------------------------------------------- | -------------- | ---------------------------------------------------------- |
+| `up`     | `0x3DdfA8eC3052539b6C9549F12cEA2C295cfF5296` | +$57k (+2.2%)  | One clear mover (SPX +$63k)                                |
+| `down`   | `0x176F3DAb24a159341c0509bB36B833E7fdd0a132` | −$9.6M (−0.5%) | stETH/WBTC drawdown, large numbers for compact formatting  |
+| `active` | `0x020cA66C30beC2c4Fe3861a94E4DB4A498A35872` | −$67           | 40 txs in 7d: trade, approve, burn, execute, send, receive |
+| `quiet`  | `0x983110309620D911731Ac0932219af06091b6744` | $0             | No transactions in 7d                                      |
 
-The `quiet` fixture is **derived**: its real responses have price changes zeroed, flat charts, and fungible ids
-prefixed `quiet-` so they don't collide with the other fixtures' price history. Everything else is real JSON,
-with positions trimmed to the 40 largest priced ones plus a few unpriced and dust rows to exercise the filters.
-In mock mode timestamps are shifted so the capture moment becomes "now". Unknown addresses map to a
-fixture deterministically.
+These wallets were also recorded as fixtures for a mock mode, which was removed on 2026-09-29 (see
+`decisions.md`).

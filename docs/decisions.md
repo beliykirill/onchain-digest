@@ -85,14 +85,13 @@ leaves `shared/server/zerion`. List items are parsed one by one: a malformed pos
 logged instead of failing the whole wallet.
 → Rejected: one strict schema for the whole list (one odd airdrop token would take the page down).
 
-### Mock mode swaps the transport, not the routes
+### Real data only, no mock mode
 
-→ `USE_MOCKS=true` replaces only the HTTP transport, so fixtures travel through the same Zod schemas,
-mappers, cache and business logic as real data. Fixtures are real responses recorded on 2026-09-28
-(4 wallets: up / down / active / quiet), with timestamps shifted to "now" at read time.
-`MOCK_LATENCY_MS` and `MOCK_FAIL=route:CODE` make loading and error states reproducible.
-→ Rejected: hand-written domain-shaped fixtures (they'd drift from the real API and skip the parsing
-code).
+→ The app always talks to Zerion. A fixture mode (`USE_MOCKS`) existed during development and was removed on
+2026-09-29: the deployed page must show real wallets, and a second data path is one more thing to keep in sync
+with the API.
+→ Rejected: keeping recorded fixtures as a fallback (a demo that silently shows yesterday's numbers is worse
+than an honest error state).
 
 ### `period` is `1d | 7d` on every route
 
@@ -166,6 +165,6 @@ reuses the pointer tooltip, so there is one code path for mouse, touch and keybo
 
 ### Measured, not assumed
 
-→ Lighthouse (production build, mock data): Performance 100 / Accessibility 100 / Best Practices 100 / SEO 100
+→ Lighthouse (production build, recorded data): Performance 100 / Accessibility 100 / Best Practices 100 / SEO 100
 on desktop, and 94–96 / 100 / 100 / 100 on mobile with throttling. CLS is 0 on desktop and 0.015 on mobile. All
 controls are at least 44 px tall. Text and background pairs are at least 4.5:1 in both themes.

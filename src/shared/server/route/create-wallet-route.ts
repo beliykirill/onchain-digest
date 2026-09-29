@@ -1,7 +1,6 @@
 import type { NextApiHandler } from 'next';
 import { normalizeAddress } from 'shared/lib';
-import { API_ERROR_CODES, type ApiErrorCode, type Period } from 'shared/types';
-import { getServerEnv } from '../env';
+import type { Period } from 'shared/types';
 import { AppError, toAppError } from '../errors';
 
 export type WalletRouteName = 'summary' | 'movers' | 'chart' | 'activity';
@@ -21,22 +20,6 @@ const parsePeriod = (value: string | undefined): Period => {
   return period;
 };
 
-const throwMockFailure = (route: WalletRouteName) => {
-  const { useMocks, mockFail } = getServerEnv();
-
-  if (!useMocks || !mockFail) return;
-
-  const rule = mockFail
-    .split(',')
-    .map((entry) => entry.trim().split(':'))
-    .find(([name]) => name === route || name === '*');
-  const code = rule?.[1] as ApiErrorCode | undefined;
-
-  if (code && API_ERROR_CODES.includes(code)) {
-    throw new AppError(code, { retryAfterSeconds: code === 'RATE_LIMITED' ? 3 : undefined });
-  }
-};
-
 export const createWalletRoute =
   <T>(
     route: WalletRouteName,
@@ -54,8 +37,6 @@ export const createWalletRoute =
       if (!address) throw new AppError('INVALID_ADDRESS');
 
       const period = parsePeriod(readQueryValue(req.query.period));
-
-      throwMockFailure(route);
 
       const data = await load(address, period);
 
