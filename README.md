@@ -1,8 +1,8 @@
-# since yesterday
+# onchain-digest
 
 A 24-hour wallet digest built with the Zerion API.
 
-![since yesterday: vitalik.eth in dark mode](docs/screenshot.webp)
+![onchain-digest: vitalik.eth in dark mode](docs/screenshot.webp)
 
 ## Why
 

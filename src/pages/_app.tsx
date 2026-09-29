@@ -26,7 +26,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <Head>
-        <title>since yesterday — your 24-hour wallet digest</title>
+        <title>onchain-digest — your 24-hour wallet digest</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta
           name="description"

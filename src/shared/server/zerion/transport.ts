@@ -68,7 +68,7 @@ export const createHttpTransport = ({
           headers: {
             Authorization: authorization,
             accept: 'application/json',
-            'User-Agent': 'since-yesterday/0.1',
+            'User-Agent': 'onchain-digest/0.1',
           },
           signal: AbortSignal.timeout(timeoutMs),
         });

@@ -12,7 +12,7 @@ export const Header: FC = () => {
       <Container>
         <LogoLink href="/">
           <LogoIcon />
-          <LogoText $textTheme="bold">since yesterday</LogoText>
+          <LogoText $textTheme="bold">onchain-digest</LogoText>
         </LogoLink>
         {address && (
           <SearchContainer>

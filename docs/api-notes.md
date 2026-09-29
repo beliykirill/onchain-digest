@@ -21,7 +21,7 @@ It must **not** use a `NEXT_PUBLIC_` prefix, because Next.js inlines those into 
 
 The API sits behind Cloudflare, which **rejects some default user agents** with `403 Error 1010`
 _(live: Python `urllib` was blocked, while curl and Node `fetch` got through)_. The server client always
-sends `User-Agent: since-yesterday/0.1`.
+sends `User-Agent: onchain-digest/0.1`.
 
 ## Rate limits: stricter than planned
 
