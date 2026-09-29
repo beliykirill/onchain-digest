@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { SUSPICIOUS_CHANGE_PERCENT } from 'shared/constants';
+import { formatUsd } from 'shared/lib';
 import { BlockError } from 'shared/ui/block-error';
 import { Skeleton } from 'shared/ui/skeleton';
 import { CaptionText, MainText, SectionText } from 'shared/ui/text';
@@ -12,6 +14,7 @@ import {
   MoversList,
   SkeletonContainer,
   SkeletonWrapper,
+  SuspiciousText,
 } from './styled';
 
 export const Movers: FC = () => {
@@ -67,6 +70,20 @@ export const Movers: FC = () => {
             ))}
           </AnimatePresence>
         </MoversList>
+      )}
+      {data && data.hiddenSuspicious.symbols.length > 0 && (
+        <SuspiciousText $isStale={isPlaceholderData}>
+          Hidden as unverified spikes (over +{SUSPICIOUS_CHANGE_PERCENT}%):{' '}
+          {new Intl.ListFormat('en').format(
+            data.hiddenSuspicious.symbols.length > 3
+              ? [
+                  ...data.hiddenSuspicious.symbols.slice(0, 3),
+                  `${data.hiddenSuspicious.symbols.length - 3} more`,
+                ]
+              : data.hiddenSuspicious.symbols,
+          )}
+          , {formatUsd(data.hiddenSuspicious.contributionUsd, { signed: true })}
+        </SuspiciousText>
       )}
     </Layout>
   );

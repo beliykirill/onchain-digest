@@ -9,6 +9,7 @@ export {
   getContributionUsd,
   isBridgeActivity,
   isEligibleForMovers,
+  isSuspiciousChange,
   isValidAddress,
   normalizeAddress,
   shortenAddress,

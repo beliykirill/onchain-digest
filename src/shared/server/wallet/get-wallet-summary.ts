@@ -1,4 +1,4 @@
-import { getContributionUsd } from 'shared/lib';
+import { getContributionUsd, isSuspiciousChange } from 'shared/lib';
 import type { IWalletSummary, Period } from 'shared/types';
 import { fetchPortfolio, fetchWalletChart, getZerionClient } from '../zerion';
 import { getPositionChanges } from './position-changes';
@@ -14,10 +14,15 @@ export const getWalletSummary = async (
     period === '7d' ? fetchWalletChart(client, address, period) : Promise.resolve([]),
   ]);
 
-  const marketUsd = positionChanges.reduce(
-    (sum, change) => sum + (getContributionUsd(change) ?? 0),
-    0,
-  );
+  let marketUsd = 0;
+  let suspiciousUsd = 0;
+
+  for (const change of positionChanges) {
+    const contributionUsd = getContributionUsd(change) ?? 0;
+
+    if (isSuspiciousChange(change)) suspiciousUsd += contributionUsd;
+    else marketUsd += contributionUsd;
+  }
 
   let absoluteUsd = portfolio.change1dUsd;
   let percent = portfolio.change1dPercent;
@@ -37,7 +42,8 @@ export const getWalletSummary = async (
     change: { absoluteUsd, percent },
     breakdown: {
       marketUsd,
-      transfersUsd: absoluteUsd - marketUsd,
+      transfersUsd: absoluteUsd - marketUsd - suspiciousUsd,
+      suspiciousUsd,
       coverage: period === '1d' ? 'all' : 'top-holdings',
     },
     asOf: new Date().toISOString(),

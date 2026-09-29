@@ -1,4 +1,4 @@
-import { MIN_POSITION_VALUE_USD, MOVERS_LIMIT } from 'shared/constants';
+import { MIN_POSITION_VALUE_USD, MOVERS_LIMIT, SUSPICIOUS_CHANGE_PERCENT } from 'shared/constants';
 import type { IMover, IPosition, Nullable } from 'shared/types';
 
 export interface IPositionPeriodChange {
@@ -23,6 +23,25 @@ export const getContributionUsd = ({
   return value - value / (1 + percent / 100);
 };
 
+const getChangePercent = (
+  { position, percent }: IPositionPeriodChange,
+  contributionUsd: number,
+): Nullable<number> => {
+  const startValueUsd = (position.valueUsd ?? 0) - contributionUsd;
+
+  return percent ?? (startValueUsd > 0 ? (contributionUsd / startValueUsd) * 100 : null);
+};
+
+export const isSuspiciousChange = (change: IPositionPeriodChange) => {
+  if (change.position.asset.verified) return false;
+
+  const contributionUsd = getContributionUsd(change);
+
+  if (contributionUsd == null || contributionUsd <= 0) return false;
+
+  return (getChangePercent(change, contributionUsd) ?? Infinity) >= SUSPICIOUS_CHANGE_PERCENT;
+};
+
 export const isEligibleForMovers = (position: IPosition, minValueUsd = MIN_POSITION_VALUE_USD) =>
   position.valueUsd != null && position.valueUsd >= minValueUsd;
 
@@ -31,7 +50,9 @@ export const computeTopMovers = (
   { limit = MOVERS_LIMIT, minValueUsd = MIN_POSITION_VALUE_USD } = {},
 ): IMover[] => {
   const candidates = changes.flatMap((change) => {
-    if (!isEligibleForMovers(change.position, minValueUsd)) return [];
+    if (!isEligibleForMovers(change.position, minValueUsd) || isSuspiciousChange(change)) {
+      return [];
+    }
 
     const contributionUsd = getContributionUsd(change);
 
@@ -52,17 +73,14 @@ export const computeTopMovers = (
     .slice(0, limit)
     .map(({ change, contributionUsd }) => {
       const { position } = change;
-      const valueUsd = position.valueUsd ?? 0;
-      const startValueUsd = valueUsd - contributionUsd;
 
       return {
         id: position.id,
         asset: position.asset,
         chain: position.chain,
-        valueUsd,
+        valueUsd: position.valueUsd ?? 0,
         contributionUsd,
-        changePercent:
-          change.percent ?? (startValueUsd > 0 ? (contributionUsd / startValueUsd) * 100 : null),
+        changePercent: getChangePercent(change, contributionUsd),
         shareOfChange: totalAbs > 0 ? Math.abs(contributionUsd) / totalAbs : 0,
       };
     });

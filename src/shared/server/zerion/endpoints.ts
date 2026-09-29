@@ -80,10 +80,10 @@ export const fetchWalletChart = async (
   }));
 };
 
-export const fetchFungibleWeekChangePercent = async (
+export const fetchFungibleWeekPrices = async (
   client: IZerionClient,
   fungibleId: string,
-): Promise<Nullable<number>> => {
+): Promise<Nullable<{ first: number; last: number }>> => {
   const { data } = await client.get(
     `/fungibles/${encodeURIComponent(fungibleId)}/charts/week`,
     { currency: 'usd' },
@@ -93,9 +93,9 @@ export const fetchFungibleWeekChangePercent = async (
   const first = stats?.first ?? points[0]?.[1];
   const last = stats?.last ?? points.at(-1)?.[1];
 
-  if (first == null || last == null || first <= 0) return null;
+  if (first == null || last == null || first < 0 || last < 0) return null;
 
-  return (last / first - 1) * 100;
+  return { first, last };
 };
 
 export const fetchTransactions = async (

@@ -39,6 +39,18 @@ what it hid instead of pretending it doesn't exist.
 → Rejected: filtering on `fungible_info.flags.verified` (too strict, since real memecoins are unverified),
 and showing everything (44 of vitalik.eth's 53 weekly transactions are $0.000002 airdrops).
 
+### Unverified price spikes are reported apart from the market
+
+→ On 2026-09-29 vitalik.eth read "+$966k (+85%)": an airdropped, unverified token (ZC) went up 4,637% and
+became a $634k holding. That is a thin or manipulated market, not money the user can realise. An unverified
+token up ≥ `SUSPICIOUS_CHANGE_PERCENT` (500%) over the period, or one whose price started at $0, is left out of
+the movers and the Market figure. The headline keeps the full change so it still agrees with the chart, and the
+breakdown gains an _Unverified spikes_ part. The movers card names what it hid. A weekly chart that starts at $0
+counts the whole current value as the change instead of dropping it, which used to push these spikes into
+Net transfers.
+→ Rejected: hiding unverified tokens entirely (real memecoins are unverified too), and removing the spike from
+the headline total (it would disagree with the balance chart).
+
 ## Data layer
 
 ### Server-side proxy with a throttle queue and a shared cache

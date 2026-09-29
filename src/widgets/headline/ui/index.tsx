@@ -77,6 +77,14 @@ export const Headline: FC = () => {
                 <BreakdownValueText $trend={Math.sign(data.breakdown.marketUsd)}>
                   {formatUsd(data.breakdown.marketUsd, { signed: true })}
                 </BreakdownValueText>
+                {Math.abs(data.breakdown.suspiciousUsd) >= 0.01 && (
+                  <>
+                    {' · '}Unverified spikes{' '}
+                    <BreakdownValueText $trend={Math.sign(data.breakdown.suspiciousUsd)}>
+                      {formatUsd(data.breakdown.suspiciousUsd, { signed: true })}
+                    </BreakdownValueText>
+                  </>
+                )}
                 {' · '}Net transfers{' '}
                 <BreakdownValueText $trend={Math.sign(data.breakdown.transfersUsd)}>
                   {formatUsd(data.breakdown.transfersUsd, { signed: true })}

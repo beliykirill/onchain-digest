@@ -1,7 +1,7 @@
 import { MOVERS_LIMIT } from 'shared/constants';
 import { type IPositionPeriodChange, isEligibleForMovers } from 'shared/lib';
 import type { IPosition, Period } from 'shared/types';
-import { fetchFungibleWeekChangePercent, fetchPositions, type IZerionClient } from '../zerion';
+import { fetchFungibleWeekPrices, fetchPositions, type IZerionClient } from '../zerion';
 
 export const getPositionChanges = async (
   client: IZerionClient,
@@ -30,9 +30,18 @@ export const getPositionChanges = async (
 
   const changes = await Promise.all(
     [...byFungible].map(async ([fungibleId, group]) => {
-      const percent = await fetchFungibleWeekChangePercent(client, fungibleId).catch(() => null);
+      const prices = await fetchFungibleWeekPrices(client, fungibleId).catch(() => null);
 
-      return group.map((position) => ({ position, percent }));
+      return group.map((position) => {
+        if (prices && prices.first === 0 && prices.last > 0) {
+          return { position, absoluteUsd: position.valueUsd, percent: null };
+        }
+
+        return {
+          position,
+          percent: prices && prices.first > 0 ? (prices.last / prices.first - 1) * 100 : null,
+        };
+      });
     }),
   );
 

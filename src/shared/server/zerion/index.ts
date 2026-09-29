@@ -2,7 +2,7 @@ export { getZerionClient } from './client';
 export type { IZerionClient } from './client';
 export {
   fetchChains,
-  fetchFungibleWeekChangePercent,
+  fetchFungibleWeekPrices,
   fetchPortfolio,
   fetchPositions,
   fetchTransactions,

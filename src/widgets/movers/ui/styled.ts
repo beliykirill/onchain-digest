@@ -96,6 +96,14 @@ export const ShareIndicator = styled(motion.span)<{ $isPositive: boolean }>`
   transform-origin: left center;
 `;
 
+export const SuspiciousText = styled(CaptionText)<{ $isStale: boolean }>`
+  ${numericStyle};
+  padding-top: 12px;
+  border-top: 1px solid ${color('surfaceStroke', 0.6)};
+  opacity: ${ifProp('$isStale', 0.55, 1)};
+  transition: opacity 0.2s ease;
+`;
+
 export const EmptyContainer = styled.div`
   display: flex;
   flex-direction: column;

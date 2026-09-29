@@ -45,6 +45,7 @@ export interface IWalletSummary {
   breakdown: {
     marketUsd: number;
     transfersUsd: number;
+    suspiciousUsd: number;
     coverage: BreakdownCoverage;
   };
   asOf: string;
@@ -64,6 +65,10 @@ export interface IMovers {
   period: Period;
   items: IMover[];
   coverage: BreakdownCoverage;
+  hiddenSuspicious: {
+    symbols: string[];
+    contributionUsd: number;
+  };
 }
 
 export interface IChartPoint {
