@@ -92,7 +92,7 @@ const findFungibleChart = async (fungibleId: string): Promise<IRawChart> => {
     }
   }
 
-  throw new AppError('UPSTREAM_ERROR', { message: `No fixture for fungible ${fungibleId}.` });
+  throw new AppError('UPSTREAM_ERROR', { detail: `No fixture for fungible ${fungibleId}.` });
 };
 
 export const mockTransport: ZerionTransport = async ({ path: requestPath, params = {} }) => {
@@ -108,7 +108,7 @@ export const mockTransport: ZerionTransport = async ({ path: requestPath, params
 
   const wallet = requestPath.match(/^\/wallets\/([^/]+)\/(.+)$/);
 
-  if (!wallet) throw new AppError('UPSTREAM_ERROR', { message: `No fixture for ${requestPath}.` });
+  if (!wallet) throw new AppError('UPSTREAM_ERROR', { detail: `No fixture for ${requestPath}.` });
 
   const name = await pickWallet(wallet[1]!);
   const shiftMs = Date.now() - (await readMeta(name)).capturedAt;
@@ -129,6 +129,6 @@ export const mockTransport: ZerionTransport = async ({ path: requestPath, params
         Number(params['filter[min_mined_at]'] ?? 0),
       );
     default:
-      throw new AppError('UPSTREAM_ERROR', { message: `No fixture for ${requestPath}.` });
+      throw new AppError('UPSTREAM_ERROR', { detail: `No fixture for ${requestPath}.` });
   }
 };

@@ -64,7 +64,12 @@ export const createWalletRoute =
     } catch (error) {
       const appError = toAppError(error);
 
-      if (appError.code === 'INTERNAL') console.error(`[api/${route}]`, error);
+      if (appError.status >= 500 || appError.detail) {
+        console.error(
+          `[api/${route}] ${appError.code}: ${appError.detail ?? appError.message}`,
+          ...(appError.cause ? [appError.cause] : []),
+        );
+      }
       if (appError.retryAfterSeconds != null) {
         res.setHeader('Retry-After', String(Math.ceil(appError.retryAfterSeconds)));
       }

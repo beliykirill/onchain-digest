@@ -47,7 +47,7 @@ export const createHttpTransport = ({
   return async ({ path, params = {} }) => {
     if (!authorization) {
       throw new AppError('UNAUTHORIZED', {
-        message: 'ZERION_API_KEY is not set. Add it to .env.local or run with USE_MOCKS=true.',
+        detail: 'ZERION_API_KEY is not set. Add it to .env.local or run with USE_MOCKS=true.',
       });
     }
 
@@ -88,7 +88,9 @@ export const createHttpTransport = ({
       if (status === 429) {
         if (response.headers.get('ratelimit-org-day-remaining') === '0') {
           throw new AppError('RATE_LIMITED', {
-            message: 'Daily request limit reached. Switch to USE_MOCKS=true or try again tomorrow.',
+            message: 'We’ve hit today’s data limit. Try again later.',
+            detail:
+              'Zerion daily quota is exhausted. Switch to USE_MOCKS=true or wait for the reset.',
             retryAfterSeconds: readSeconds(response, 'ratelimit-org-day-reset'),
           });
         }
@@ -126,7 +128,11 @@ export const createHttpTransport = ({
         throw new AppError(/address/i.test(detail) ? 'INVALID_ADDRESS' : 'INVALID_PARAMS');
       }
 
-      if (status === 401 || status === 403) throw new AppError('UNAUTHORIZED');
+      if (status === 401 || status === 403) {
+        throw new AppError('UNAUTHORIZED', {
+          detail: `Zerion rejected the API key (HTTP ${status}).`,
+        });
+      }
       if (status === 422) throw new AppError('WALLET_TOO_LARGE');
 
       throw new AppError('UPSTREAM_ERROR');
