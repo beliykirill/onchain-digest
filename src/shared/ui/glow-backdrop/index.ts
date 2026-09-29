@@ -1,0 +1,1 @@
+export { GlowBackdrop } from './styled';

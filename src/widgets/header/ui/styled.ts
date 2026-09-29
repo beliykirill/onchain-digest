@@ -7,10 +7,11 @@ export const Layout = styled.header`
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 1px solid ${color('surfaceStroke', 0.7)};
-  background: ${color('surfaceBackground', 0.82)};
-  backdrop-filter: saturate(1.4) blur(12px);
-  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  padding: 12px 24px 0;
+
+  ${media(MediaType.MOBILE)} {
+    padding: 8px 16px 0;
+  }
 `;
 
 export const Container = styled.div`
@@ -19,14 +20,22 @@ export const Container = styled.div`
   justify-content: space-between;
   gap: 16px;
   width: 100%;
-  max-width: 1120px;
+  max-width: 1072px;
   min-height: 64px;
   margin: 0 auto;
-  padding: 10px 24px;
+  padding: 8px 8px 8px 16px;
+  border: 1px solid ${color('surfaceStroke', 0.6)};
+  border-radius: 20px;
+  background: ${color('surfaceCard', 0.55)};
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  backdrop-filter: saturate(1.6) blur(20px);
+  -webkit-backdrop-filter: saturate(1.6) blur(20px);
 
   ${media(MediaType.MOBILE)} {
     flex-wrap: wrap;
-    padding: 10px 16px;
+    gap: 8px 12px;
+    padding: 8px 8px 8px 12px;
+    border-radius: 16px;
   }
 `;
 
@@ -63,16 +72,4 @@ export const LogoIcon = styled.span`
 
 export const LogoText = styled(MainText)`
   letter-spacing: -0.01em;
-`;
-
-export const SearchContainer = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-  min-width: 0;
-
-  ${media(MediaType.MOBILE)} {
-    flex-basis: 100%;
-    order: 3;
-  }
 `;

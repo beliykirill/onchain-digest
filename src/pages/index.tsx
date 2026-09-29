@@ -6,6 +6,7 @@ import { Headline } from 'widgets/headline';
 import { Intro } from 'widgets/intro';
 import { Movers } from 'widgets/movers';
 import { useWalletParams } from 'shared/lib/hooks';
+import { GlowBackdrop } from 'shared/ui/glow-backdrop';
 import { DetailsWrapper, PageContainer, PageLayout } from 'shared/ui/page';
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
 
   return (
     <PageLayout>
+      <GlowBackdrop />
       <Header />
       <PageContainer>
         {address ? (
